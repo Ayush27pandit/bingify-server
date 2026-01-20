@@ -17,11 +17,12 @@ const PORT = process.env.PORT ? Number(process.env.PORT) : 8000;
 app.use(express.json());
 
 app.use(cors({
-  origin: "http://localhost:3000", // frontend URL
+  origin: process.env.FRONTEND_URL as string, // frontend URL
   credentials: true,               // allow cookies
 }));
 
 
+//seeding movies
 
 
 //-------Routes-----------------
@@ -41,12 +42,14 @@ app.use("/protected", protectedRoutes);
 //session routes
 app.use("/auth", sessionRoutes);
 
+//---cron-jobs-----
+startRoomCleanupJob();
 
 //-------Socket.io----------------
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_URL as string,
     credentials: true
   }
 })
@@ -60,6 +63,8 @@ io.on("connection", (socket) => {
 })
 
 import { fileURLToPath } from 'url';
+import { startRoomCleanupJob } from './jobs/roomCleanUp';
+import { uploadMovies } from './controller/seedMovies';
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   server.listen(PORT, () => {

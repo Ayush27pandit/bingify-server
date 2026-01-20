@@ -16,7 +16,7 @@ datasource db {
 
 model Room {
   id             String   @id @default(cuid())
-  roomid         String   @unique
+  roomId         String   @unique
   joinToken      String   @unique
   passwordHashed String
   createdAt      DateTime @default(now())
@@ -33,8 +33,26 @@ model User {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
+  picture   String?
   createdAt DateTime @default(now())
+  joinToken String?
+  hostToken String?
   updatedAt DateTime @updatedAt
-  room      Room?    @relation(fields: [roomCode], references: [id])
-  roomCode  String?  @unique
+  room      Room?    @relation(fields: [roomId], references: [id])
+  roomId    String?
+}
+
+model Movie {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  thumbnailUrl  String
+  rating        Float
+  year          Int
+  genre         String
+  duration      Int
+  createdAt     DateTime @default(now())
+  muxAssetId    String   @unique
+  muxPlaybackId String   @unique
+  updatedAt     DateTime @updatedAt
 }

@@ -23,7 +23,7 @@ router.post("/session", async (req, res) => {
     try {
 
         const decoded = await admin.auth().verifyIdToken(token);
-        console.log(decoded);
+        console.log("decoded data: ", decoded);
 
         res.cookie("session", token, {
             httpOnly: true,
@@ -35,12 +35,19 @@ router.post("/session", async (req, res) => {
             return res.status(400).json({ message: "Email is required" });
         }
 
-        const user = await prisma.user.create({
-            data: {
-                name: decoded.name ?? "Anonymous",
+        const user = await prisma.user.upsert({
+            where: {
                 email: decoded.email,
-                roomCode: null,
-            }
+            },
+            update: {
+                name: decoded.name ?? decoded.email,
+                picture: decoded.picture ?? "",
+            },
+            create: {
+                name: decoded.name ?? decoded.email,
+                email: decoded.email,
+                picture: decoded.picture ?? "",
+            },
         })
         res.json({ success: true });
     } catch (error) {

@@ -9,7 +9,7 @@ export const createRoom = async (req: Request, res: Response) => {
     //-- create a room in socket.id
 
     const roomInfo = {
-        roomid: crypto.randomBytes(4).toString("hex").toUpperCase(),
+        roomId: crypto.randomBytes(4).toString("hex").toUpperCase(),
         joinToken: crypto.randomBytes(6).toString("hex"),
         password: crypto.randomInt(100000, 999999).toString(),
         createdAt: new Date(),
@@ -21,7 +21,7 @@ export const createRoom = async (req: Request, res: Response) => {
     try {
         const room = await prisma.room.create({
             data: {
-                roomid: roomInfo.roomid,
+                roomId: roomInfo.roomId,
                 joinToken: roomInfo.joinToken,
                 passwordHashed: roomInfo.password,
                 hostToken: roomInfo.hostToken,
@@ -37,7 +37,7 @@ export const createRoom = async (req: Request, res: Response) => {
 
     // send client room id and join token (using camelCase for frontend)
     res.status(201).json({
-        roomId: roomInfo.roomid,  // camelCase for frontend
+        roomId: roomInfo.roomId,  // camelCase for frontend
         joinToken: roomInfo.joinToken,
         password: roomInfo.password,
         hostToken: roomInfo.hostToken,
