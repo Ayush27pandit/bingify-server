@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "node10",
     "outDir": "dist",
     "rootDir": "src",
     "strict": true,
@@ -15,7 +15,5 @@
     "esm": true,
     "experimentalSpecifierResolution": "node"
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
