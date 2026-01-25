@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import prisma from '../lib/db';
+import prisma from '../lib/db.js';
 
 export const activeRoom = async (req: Request, res: Response) => {
   //client request active room and server respond with active room details
   //roomid
   //also we need to add member in room members list
   // active status of room and it member are of same request
-  const { roomId } = req.body;
+  const { roomId, movieId } = req.body;
 
   if (!roomId) {
     return res.status(400).json({ message: 'Room ID is required' });
@@ -22,7 +22,10 @@ export const activeRoom = async (req: Request, res: Response) => {
 
     const room = await prisma.room.update({
       where: { roomId: roomId },
-      data: { isActive: true },
+      data: {
+        isActive: true,
+        movieUrl: movieId || roomExists.movieUrl // Store movieId in movieUrl field
+      },
     });
     return res.status(200).json({ message: 'Room activated', room });
   } catch (err) {

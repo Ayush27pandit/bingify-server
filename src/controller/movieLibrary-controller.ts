@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import prisma from '../lib/db';
+import prisma from '../lib/db.js';
 
 export const movieLibrary = async (req: Request, res: Response) => {
   //client request movies list and server respond with list of movies and their meta data
