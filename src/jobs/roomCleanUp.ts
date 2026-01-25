@@ -30,11 +30,15 @@ async function deleteExpiredRooms() {
 }
 
 export function startRoomCleanupJob() {
-  // Run every 12 hours
+  // 1. Run immediately on server start
+  console.log('Performing initial room cleanup on startup...');
+  deleteExpiredRooms();
+
+  // 2. Schedule to run every 12 hours
   crons.schedule('0 */12 * * *', async () => {
-    console.log('Running room cleanup job...');
+    console.log('Running scheduled room cleanup job...');
     await deleteExpiredRooms();
   });
 
-  console.log('Room cleanup job started');
+  console.log('Room cleanup job initialized (12-hour schedule)');
 }
