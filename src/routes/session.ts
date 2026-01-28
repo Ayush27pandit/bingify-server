@@ -24,10 +24,12 @@ router.post('/session', async (req, res) => {
     const decoded = await admin.auth().verifyIdToken(token);
     console.log('decoded data: ', decoded);
 
+    const isProduction = process.env.NODE_ENV === 'production';
+
     res.cookie('session', token, {
       httpOnly: true,
-      secure: false, // true in production
-      sameSite: 'strict',
+      secure: true, // Always true for cross-site cookies
+      sameSite: 'none',
     });
     //add user detail to db
     if (!decoded.email) {
@@ -88,8 +90,8 @@ router.post('/session', async (req, res) => {
 router.post('/logout', (req, res) => {
   res.clearCookie('session', {
     httpOnly: true,
-    sameSite: 'lax',
-    secure: false, // true in prod
+    sameSite: 'none',
+    secure: true,
   });
 
   res.json({ success: true });
