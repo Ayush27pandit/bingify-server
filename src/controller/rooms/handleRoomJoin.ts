@@ -38,7 +38,7 @@ export function handleRoomJoin(io: any, socket: any) {
       }
 
       // if user is already in the room (allow reconnection)
-      const isAlreadyMember = room.members.some(member => member.id === userId);
+      const isAlreadyMember = room.members.some((member: any) => member.id === userId);
 
       // check room capacity (only if not already a member)
       if (!isAlreadyMember && room.members.length >= MAX_ROOM_MEMBERS) {
