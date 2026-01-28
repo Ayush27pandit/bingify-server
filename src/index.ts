@@ -17,13 +17,14 @@ import { socketAuthMiddleware } from './firebase-auth/socket-auth.js';
 const app = express();
 const server = createServer(app);
 const PORT = process.env.PORT ? Number(process.env.PORT) : 8000;
+const FRONTEND_URL = process.env.FRONTEND_URL?.replace(/\/$/, '') as string;
 
 //-------Middleware-------------
 app.use(express.json());
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL as string,
+    origin: FRONTEND_URL,
     credentials: true, // allow cookies
   }),
 );
@@ -52,7 +53,7 @@ startRoomCleanupJob();
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL as string,
+    origin: FRONTEND_URL,
     credentials: true,
   },
 });
