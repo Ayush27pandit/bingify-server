@@ -5,13 +5,19 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum PlaybackState {
+  PLAYING
+  PAUSED
 }
 
 model Room {
@@ -22,11 +28,13 @@ model Room {
   createdAt      DateTime @default(now())
   hostToken      String   @unique
 
-  isActive       Boolean   @default(false)
-  videoStartTime DateTime?
-  movieUrl       String?
-  updatedAt      DateTime  @updatedAt
-  members        User[]
+  isActive        Boolean       @default(false)
+  playbackState   PlaybackState @default(PAUSED)
+  playbackOffset  Float         @default(0) // time in seconds
+  serverStartTime DateTime? // when playback started/resumed
+  movieUrl        String?
+  updatedAt       DateTime      @updatedAt
+  members         User[]
 }
 
 model User {

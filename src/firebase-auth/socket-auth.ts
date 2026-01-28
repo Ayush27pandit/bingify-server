@@ -15,6 +15,7 @@ export async function socketAuthMiddleware(socket: any, next: any) {
       id: decoded.uid,
       email: decoded.email,
       name: decoded.name,
+      picture: decoded.picture,
     };
 
     next();

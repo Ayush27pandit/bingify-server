@@ -7,3 +7,9 @@ npm-debug.log
 /generated/prisma
 
 /src/generated/prisma
+
+# Antigravity Artifacts
+task.md
+implementation_plan.md
+walkthrough.md
+implementation_plan_redis.md

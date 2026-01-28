@@ -9,6 +9,8 @@ import { fileURLToPath } from 'url';
 import { startRoomCleanupJob } from './jobs/roomCleanUp.js';
 import { uploadMovies } from './controller/seedMovies.js';
 import { handleRoomJoin, handleRoomLeave } from './controller/rooms/handleRoomJoin.js';
+import { handlePlaybackSync } from './controller/rooms/handlePlaybackSync.js';
+import { startPeriodicPlaybackSync } from './jobs/playbackSync.js';
 import { socketAuthMiddleware } from './firebase-auth/socket-auth.js';
 
 // --------App and Server--------
@@ -21,7 +23,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL as string, // frontend URL
+    origin: process.env.FRONTEND_URL as string,
     credentials: true, // allow cookies
   }),
 );
@@ -65,16 +67,22 @@ io.on('connection', (socket) => {
   //handling leaving room
   handleRoomLeave(io, socket);
 
+  //handling playback sync
+  handlePlaybackSync(io, socket);
+
   socket.on('disconnect', () => {
     console.log(`User disconnected with socket id: ${socket.id}`);
   });
 });
 
+// Start periodic sync job
+startPeriodicPlaybackSync(io);
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   server.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}/`);
+    console.log(`Server listening on port ${PORT}`);
   });
 }
-//lets do it
+
 
 export default app;
